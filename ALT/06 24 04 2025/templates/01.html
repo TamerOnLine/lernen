@@ -66,22 +66,5 @@
 </div>
 {% endif %}
 
-{% if divine_matches is not none %}
-<div class="section">
-  <h3>🕊️ أسماء الله الحسنى المطابقة:</h3>
-  <ul>
-    {% if divine_matches|length > 0 %}
-      {% for name in divine_matches %}
-        <li><strong>{{ name.name }}</strong>: {{ name.meaning }}</li>
-      {% endfor %}
-    {% else %}
-      <li>لا يوجد اسم مطابق في قاعدة البيانات لهذه القيمة الأبجدية.</li>
-    {% endif %}
-  </ul>
-</div>
-{% endif %}
-
-
-
 </body>
 </html>

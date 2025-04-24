@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>حساب الوفاق والقيمة الأبجدية</title>
+    <style>
+        body {
+            font-family: "Tahoma", sans-serif;
+            direction: rtl;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        textarea {
+            padding: 10px;
+            width: 600px;
+            height: 100px;
+            font-size: 16px;
+            resize: vertical;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        table {
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            width: 100%;
+        }
+        td, th {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .result-box {
+            margin-top: 20px;
+            background-color: #e9f5ff;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>حساب الوفاق والقيمة الأبجدية</h1>
+    <form method="POST">
+        <textarea name="text" placeholder="أدخل النص..." required maxlength="1000">{{ text }}</textarea>
+        <input type="submit" value="احسب">
+    </form>
+
+    {% if value %}
+    <div class="result-box">
+        <p><span class="label">النص:</span> {{ text }}</p>
+        <p><span class="label">القيمة الأبجدية:</span> {{ value }}</p>
+        <p><span class="label">نوع الوفاق:</span> <strong>{{ waffaq_info.type }}</strong></p>
+        <ul>
+            <li>الصفوف: {{ "✅" if waffaq_info.rows_ok else "❌" }}</li>
+            <li>الأعمدة: {{ "✅" if waffaq_info.cols_ok else "❌" }}</li>
+            <li>القطران: {{ "✅" if waffaq_info.diags_ok else "❌" }}</li>
+        </ul>
+
+        {% if size %}
+            <p><span class="label">حجم المربع:</span> {{ size }} × {{ size }}</p>
+            <p><span class="label">المضاعف:</span> {{ multiplier }}</p>
+
+            {% if table %}
+            <h3>المربع السحري:</h3>
+            <table>
+                {{ table | safe }}
+            </table>
+            {% endif %}
+
+            {% if planet_info %}
+            <h3>التحليل الفلكي للمربع:</h3>
+            <table>
+                <tr>
+                    <th>الكوكب المرتبط</th>
+                    <th>اليوم</th>
+                    <th>المعدن</th>
+                    <th>الوصف الرمزي</th>
+                </tr>
+                <tr>
+                    <td>{{ planet_info.planet }}</td>
+                    <td>{{ planet_info.day }}</td>
+                    <td>{{ planet_info.metal }}</td>
+                    <td>{{ planet_info.description }}</td>
+                </tr>
+            </table>
+            {% endif %}
+
+            {% if extended_info %}
+            <h3>التحليل الرمزي الموسّع للمربع:</h3>
+            <p style="font-size: 18px; background-color: #fff3cd; padding: 10px; border-radius: 8px;">
+                🔮 {{ extended_info }}
+            </p>
+            {% endif %}
+
+        {% else %}
+            <p><strong style="color: red;">لا يمكن إنشاء مربع سحري متوافق مع هذه القيمة الأبجدية.</strong></p>
+        {% endif %}
+    </div>
+    {% endif %}
+</body>
+</html>
