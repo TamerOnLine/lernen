@@ -1,0 +1,16 @@
+<h2>نتائج التحليل للنص:</h2>
+<p>{{ input_text }}</p>
+
+{% for item in results %}
+  <h3>الاسم: {{ item.name }}</h3>
+  <p>القيمة: {{ item.value }} | الرقم الفردي: {{ item.reduced }} - {{ item.number_meaning }}</p>
+  <p>نوع الوفق: {{ item.type.type }}</p>
+  <table border="1">{{ item.waffaq|safe }}</table>
+  {% if item.planet %}
+    <p>الكوكب الرمزي: {{ item.planet.planet }} - {{ item.planet.meaning }}</p>
+  {% endif %}
+  {% if item.symbol %}
+    <p>الرمزية الموسعة: {{ item.symbol }}</p>
+  {% endif %}
+  <hr>
+{% endfor %}

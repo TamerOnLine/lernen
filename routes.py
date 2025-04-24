@@ -2,8 +2,36 @@ from flask import Blueprint, render_template, request, jsonify
 from logic.abjad import calculate_abjad_value, get_numeric_symbolism
 from logic.waffaq import recommend_waffaq_type, format_magic_square, detect_waffaq_type
 from db.symbolism import get_planetary_info, get_extended_symbolism, get_matching_divine_names
+from logic.text_analysis import extract_divine_names_from_text
+from jinja2 import Template
+import sqlite3
 
 main_routes = Blueprint('main_routes', __name__)
+
+def get_sections():
+    conn = sqlite3.connect("instance/symbolism.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT name, content FROM html_sections WHERE visible = 1 ORDER BY section_order")
+    result = cursor.fetchall()
+    conn.close()
+    return {name: content for name, content in result}
+
+def render_section(template_str, context):
+    template = Template(template_str)
+    return template.render(**context)
+
+def get_rendered_sections(context):
+    conn = sqlite3.connect("instance/symbolism.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT name, content FROM html_sections WHERE visible = 1 ORDER BY section_order")
+    result = cursor.fetchall()
+    conn.close()
+
+    rendered_sections = {}
+    for name, content in result:
+        rendered_sections[name] = render_section(content, context)
+    return rendered_sections
+
 
 @main_routes.route('/', methods=['GET', 'POST'])
 def index():
@@ -24,6 +52,22 @@ def index():
     else:
         planet_info = extended_info = reduced_number = number_meaning = None
 
+    context = {
+    "text": text,
+    "value": value,
+    "size": size,
+    "multiplier": multiplier,
+    "table": table,
+    "waffaq_info": waffaq_info,
+    "planet_info": planet_info,
+    "extended_info": extended_info,
+    "reduced_number": reduced_number,
+    "number_meaning": number_meaning,
+    "divine_matches": divine_matches
+}
+    sections = get_rendered_sections(context)
+
+
     return render_template(
         "index.html",
         text=text,
@@ -36,21 +80,6 @@ def index():
         extended_info=extended_info,
         reduced_number=reduced_number,
         number_meaning=number_meaning,
-        divine_matches=divine_matches
+        divine_matches=divine_matches,
+        sections=sections
     )
-
-@main_routes.route('/api/waffaq', methods=['POST'])
-def api_waffaq():
-    data = request.get_json()
-    text = data.get("text", "")
-    if not text:
-        return jsonify({"error": "يرجى إرسال نص"}), 400
-    value = calculate_abjad_value(text)
-    size, multiplier, square = recommend_waffaq_type(value)
-    return jsonify({
-        "abjad_value": value,
-        "size": size,
-        "multiplier": multiplier,
-        "magic_square": square,
-        "waffaq_type": detect_waffaq_type(square)
-    })
