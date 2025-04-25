@@ -11,11 +11,14 @@
   {{ sections['form_section']|safe }}
 
   {% if value %}
+    {{ sections['waffaq_result']|safe }}
     {{ sections['result_summary']|safe }}
     {{ sections['planetary_info']|safe }}
     {{ sections['extended_symbolism']|safe }}
-    {{ sections['waffaq_result']|safe }}
+    
     {{ sections['divine_names']|safe }}
+    {{ sections['gematria_link']|safe }}
+
   {% endif %}
 </body>
 </html>

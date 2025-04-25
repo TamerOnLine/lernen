@@ -88,6 +88,28 @@ for name, content, order, visible in sections:
         )
     """, (name, name, content.strip(), order, int(visible)))
 
+cursor.execute("""
+    INSERT OR REPLACE INTO html_sections (id, name, content, section_order, visible)
+    VALUES (
+        (SELECT id FROM html_sections WHERE name = ?),
+        ?, ?, ?, ?
+    )
+""", (
+    'gematria_link',
+    'gematria_link',
+    """
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="{{ url_for('main_routes.gematria_search') }}" class="btn-link">
+        🔎 البحث عن أسماء الله الحسنى بالقيمة الجُمّلية
+      </a>
+    </div>
+    """.strip(),
+    999,
+    1
+))
+
+
+
 # حفظ وإغلاق
 conn.commit()
 conn.close()

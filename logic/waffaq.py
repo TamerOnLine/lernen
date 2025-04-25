@@ -50,7 +50,7 @@ def scale_magic_square(square, multiplier):
     return [[val * multiplier for val in row] for row in square]
 
 def recommend_waffaq_type(value):
-    for size in range(3, 20):
+    for size in range(3, 22):
         cells = size * size
         if value % cells == 0:
             multiplier = value // cells

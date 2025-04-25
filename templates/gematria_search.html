@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>بحث الجُمّل</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <h2 style="text-align:center;">🔍 البحث في أسماء الله الحسنى بالقيمة الجُمّلية</h2>
+
+  <form method="post" style="text-align:center; margin-top: 20px;">
+    <label>أدخل رقمًا:</label>
+    <input type="number" name="value" required>
+    <button type="submit">ابحث</button>
+  </form>
+
+  {% if value %}
+    <h3 style="text-align:center; margin-top: 30px;">النتائج للقيمة: {{ value }}</h3>
+
+    {% if results %}
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
+        {% for combo in results %}
+          <div style="background-color:#e3f2fd; padding: 10px 15px; border-radius: 10px; font-weight:bold;">
+            {{ combo | join(' + ') }}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="text-align:center; color:red;">⚠ لا توجد توليفات تطابق هذه القيمة.</p>
+    {% endif %}
+  {% endif %}
+</body>
+</html>
